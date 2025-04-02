@@ -1,89 +1,45 @@
-# E-Scooter Demand Dashboard – Project Overview
+# E-Scooter Demand Forecasting Dashboard
 
-**Goal:** Within **two weeks**, build a functional prototype that forecasts **E-Scooter usage and operational demand** both **temporally** (time-based) and **spatially** (location-based). We so aimed to visualize how external factors (weather, holidays, events) affect usage patterns and how many scooters may need to be moved into or out of certain areas.
+This project was developed as a capstone for a data science bootcamp and explores e-scooter demand modeling in the city of Chicago. The inspiration came from an earlier team project, where we were tasked with designing a cloud-based data pipeline to collect weather and flight data. The scenario assumed an e-scooter company considering expansion, and needing reliable demand forecasts to make decisions around scooter relocation and pricing strategies.
 
----
+The question was intriguing enough to pursue further, so I decided to build a comprehensive dashboard for my final project. The goal: leverage real-world public e-scooter trip data, enriched with weather, holiday, and event information, to forecast demand in both time and space. The result is a functional, interactive tool that can help operators understand how external conditions influence scooter usage and where resources are likely needed most.
 
-## Core Models: Three “Decks” Explained
+## Project Overview
 
-1. **Temporal Deck (Hourly Demand Model)**  
-   - **Focus**: Predicts overall hourly scooter usage across the entire city.  
-   - **Key Features**:  
-     - Day of the week, month, holiday indicators  
-     - Weather conditions (rain, snow, wind, humidity)  
-     - Special events (e.g., football games)  
-   - **Output**: An **hourly demand forecast** showing how many rides are expected citywide at each hour.
+The dashboard brings together historical data visualizations and predictive models across several views. These views are accessible via tabs in the application and can also be explored on mobile (with the sidebar collapsed by default).
 
-2. **Spatial Trip Deck (Trip Distribution Model)**  
-   - **Focus**: Displays **where rides start** over time, highlighting regions with higher or lower trip volumes.  
-   - **Key Features**:  
-     - Similar to the Temporal Deck (day-of-week, weather, events)  
-     - Spatial segmentation—pinpointing trip **start locations** across different time frames  
-   - **Output**: A **spatiotemporal forecast** illustrating which regions see higher or lower numbers of **trip**, helping providers understand consumer demand.
+The **Historical Dashboard** provides an overview of past usage patterns. Users can analyze trends over time, explore usage by hour and day of the week, and review how trip volumes change across months. This section gives context to the data that powers the models.
 
-3. **Demand Deck (Net Operational Demand Model)**  
-   - **Focus**: Estimates how many scooters **accumulate** in or **vanish** from a specific area over a **6-hour window**—helping operators see where they must **add** or **remove** scooters.  
-   - **Key Features**:  
-     - Starts vs. ends in each region, aggregated over 6 hours  
-     - External factors (again weather, events, holidays)  
-   - **Output**: A **net demand metric** (ends - starts or vice versa), informing operational moves. This is not purely “consumer demand” but rather the **operational demand** for scooter placement/relocation.
+The **Temporal Scenario Model** estimates total scooter usage by hour. It incorporates calendar effects such as weekday and month, as well as external influences like temperature, precipitation, and event schedules. The forecast is visualized as a time series, with sliders allowing users to simulate different scenarios and see how demand fluctuates in response.
 
-### Why We Didn’t Finish a Full “Space-to-Space” Vector Model
-- Modeling each origin–destination pair in detail (for about 70 spatial bins) leads to over 5000 possible connections.  
-- Including a **temporal dimension** (e.g., hourly or 6-hour intervals) amplifies the data and computational requirements.  
-- Within two weeks, we couldn’t thoroughly tackle such a high-dimensional challenge.  
+The **Consumer Demand Model** extends the analysis into space. It predicts the number of trips originating in each hexagonal region of the city. These predictions are mapped dynamically and give a sense of where scooters are most likely to be needed based on conditions.
 
----
+The **Operational Demand Model** goes one step further. Instead of just showing where scooters are picked up, it estimates the net operational demand—the difference between scooters arriving and departing in each area over a six-hour window. This can help vendors plan for relocation by highlighting areas of surplus and shortage. Regions with a strong surplus (excess scooters) are marked in red, while areas with a deficit (shortage of scooters) appear blue. This visual cue offers intuitive guidance for balancing fleet distribution.
 
-## What We Actually Achieved
+While the foundation is strong, the two-week time frame limited what could be achieved in certain areas. For instance, a discounting strategy—where operators might offer incentives to rebalance supply—could only be partially addressed. A full origin–destination (O–D) model would be necessary to simulate the effects of discounting on trip flows between regions. However, this increases model complexity significantly, with over 5,000 spatial combinations, and was out of scope for the available time.
 
-- **Historical Dashboard**: Displays past usage trends, revealing seasonality and general usage spikes.  
-- **3D and Map Visualizations**:  
-  - **KeplerGL Page**: Enables visual “scouting” of trip vectors in 3D (Arc layer), so you can see the high dimensionality of the problem but also a potential starting point for further analysis or modeling.  
-  - **the thre Scenario Decks**: Show areas and times with high demand in scooter and scooter availability, potentially aiding operational decisions.  
-- **Integration of External Factors**:  
-  - **Weather** (rain, snow, wind, humidity)  
-  - **Holidays** (impacting usage patterns)  
-  - **Major Events** (e.g., football games)
+## Technical Approach
 
-Although data constraints (hourly intervals, wide spatial bins) limited precision, we demonstrated **how external factors correlate** with changing scooter usage or net demand. These methods are easily transferable to other industries (e.g., sales forecasts plus promotional events).
+The models were trained on a comprehensive dataset combining public e-scooter trip records from Chicago with web-scraped weather data, holiday calendars, and event schedules. Feature engineering included spatial binning via H3 hexagons, temporal aggregations (hourly, daily, and monthly), and the construction of features to reflect calendar effects, seasonality, and external shocks such as sports events.
+
+A key component of the modeling pipeline was a hybrid forecasting strategy that combined Prophet, a time series model developed by Meta, with XGBoost, a powerful gradient boosting regressor. Prophet was first used to model the core temporal trends and seasonality in the scooter trip volumes. Its forecasts were then integrated into the XGBoost model as lag-style features—allowing the tree-based model to benefit from Prophet's strong temporal extrapolation without needing to design complex recurrent pipelines or manage rolling time-based validation schemes.
+
+This setup provided the best of both worlds: Prophet handled long-horizon forecasting elegantly, while XGBoost brought in the flexibility and precision required to incorporate high-dimensional exogenous features like weather and event indicators. As a result, the models were able to deliver both accurate short-term predictions and scenario-based forecasts far beyond the range of historical data.
+
+The final interactive dashboard was built in Streamlit, offering a lightweight but powerful front-end for scenario exploration. Users can manipulate weather, calendar, and event parameters to simulate hypothetical conditions and observe their impact in both the temporal and spatial domains. Visualizations were built using Plotly for interactivity, Pydeck for spatial rendering, and KeplerGL during early prototyping to explore trip trajectories and spatial flows.
+
+## Challenges and Insights
+
+A key insight was the difficulty of managing high-dimensional spatiotemporal forecasting. While trip starts and ends are relatively easy to model individually, combining them into a full matrix of flows poses significant challenges. Nonetheless, modeling starts and net demand separately already provides valuable operational insights.
+
+Another learning was the importance of scenario simulation. Rather than focusing solely on predictive accuracy, the models are designed to explore "what-if" questions: What happens to demand if the weather worsens? How does a football game shift the flow of trips? This ability to experiment with assumptions is where the dashboard provides its current value given we don't have real-time trip data to play with.
+
+## Final Thoughts
+
+This project demonstrates that data-driven insights can inform real-world decision-making for mobility providers. Even with limited time and imperfect data, it's possible to extract actionable signals from patterns in usage, environment, and human behavior. The dashboard can serve as a foundation for more advanced analytics in the future, whether through discount modeling, live fleet optimization, or more granular origin–destination analysis.
 
 ---
-## Project Plan
 
-- **Data Engineer (DE)**
-   - Collects, cleans, and enriches raw scooter trip data.
-   - Integrates external factors (weather, holidays, events).
-   - Defers deeper spatial transformations to the ML Engineer.
-- **Machine Learning Engineer (MLE)**
-   - Builds, tests, and refines forecasting models.
-   - Performs spatial binning/clustering to create region-level (or O–D) analyses.
-   - Explores scenario simulations (discounts in certain regions).
-- **Data Visualizer / Streamlit Developer (DV)**
-   - Provides an interactive dashboard combining multiple “decks.”
-   - Adds user-friendly controls to test hypothetical conditions (e.g., event day, weather extremes).
-
----
-## What I Learned
-
-- **Data Cleaning & Project Leadership**:  
-  - Initially stepped into **Data Engineer duties** to rapidly prepare the scooter trip data.  
-  - Served as **Project Lead**, defining goals, coordinating tasks, and maintaining focus.
-
-- **AI Engineering**:  
-  - Developed multiple **forecasting models** (hourly citywide usage, spatial trip distribution, and net operational demand).  
-  - Ensured results were integrated into a **user-friendly dashboard** for quick insights.
-
-- **Key Success Factors**:  
-  - **Frequent communication**—daily updates.  
-  - **Clear role assignments**, allowing concurrent development (data prep, modeling, visualization).  
-  - **Successive feature integration**, letting the models evolve as new data arrive, as well as visualizing the models using the Scenario Decks in the Streamlit App, ensures relative independence of the three formulated roles.
-
-- **Outcome**:  
-  - A dynamic prototype showing **when, where, and how many scooters** are used—or needed—across Chicago.  
-  - Despite the data gaps and the inability to finalize a full “vector” O–D model, we laid a strong foundation for more advanced mobility analytics.
-
----
 
 ## Key Skills & Technologies Acquired
 

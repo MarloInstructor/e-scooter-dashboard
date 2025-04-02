@@ -21,7 +21,7 @@ st.markdown(
 )
 
 # --- NAVIGATION & SIDEBAR INFO ---
-st.subheader("📍 Navigation & Usage")
+st.subheader("Navigation & Usage")
 st.markdown(
     """
     **Navigation**: Use the **sidebar** to move between different functions of the dashboard. 
@@ -33,34 +33,57 @@ st.markdown(
 )
 
 # --- OVERVIEW OF SECTIONS ---
-st.subheader("📊 Dashboard Sections")
+st.subheader("Dashboard Sections")
+
 st.markdown(
     """
-    - **Historical Dashboard**  
-      Explore past ridership data, both temporal and spatial, and look at the forecasting accuracy. 
+    **Historical Dashboard**  
+    Explore past ridership data both temporally and spatially. View monthly usage trends and assess how well our models 
+    performed by comparing historical predictions against actual data.
 
-    - **Temporal Scenario Deck**  
-      Create custom forecasts based on calendar inputs (day of week, month, hour) 
-      and weather conditions (temperature, rain, snow, wind). Visualize how changes 
-      in these factors might affect hourly trip counts against a baseline.
+    **Temporal Scenario Deck**  
+    Create custom forecasts based on calendar inputs (weekday, month, hour) and external conditions such as temperature, rain, 
+    wind, or events. See how changing these variables affects hourly citywide demand.
 
-    - **Spatial Trip Deck**  
-      Explore E-Scooter demand on an interactive map. Identify hotspots, 
-      visualize potential capacity constraints, and detect patterns across different neighborhoods in Chicago.
+    **Spatial Trip Deck**  
+    Visualize e-scooter trip volumes across Chicago on an interactive hex map. Identify hotspots and usage patterns in 
+    specific neighborhoods, and observe how demand shifts under different conditions.
 
-    - **Spatial Demand Deck**  
-      Zoom into high-demand zones for rebalancing and resource planning. Discover 
-      which areas consistently see peak usage and strategize daily scooter deployment.
+    **Spatial Demand Deck**  
+    Estimate the operational need for scooter relocation. This tool highlights areas with expected net accumulation or depletion 
+    of scooters over a 6-hour window—useful for daily redistribution planning.
 
-    - **Space-to-Space Deck**  
-      View origin-destination flows between hex regions in 3D or 2D KeplerGL maps. 
-      A great tool for seeing how riders move throughout the city, highlighting 
-      corridors of high traffic or under-served connections.
+    **Space-to-Space Deck**  
+    Examine directional trip flows between regions using interactive 2D and 3D KeplerGL maps. Reveal popular corridors, 
+    under-utilized areas, and possible bottlenecks in rider movement.
     """
 )
 
+st.subheader("Technical Approach")
+
+st.markdown(
+    """
+    The models were trained on a rich dataset combining publicly available e-scooter trip records from Chicago with weather data, 
+    holidays, and event information scraped from the web. Spatial features were constructed using **H3 hexagonal binning**, and 
+    time-based aggregations were created to reflect daily, hourly, and monthly trends.
+
+    A key innovation in the modeling pipeline was the integration of **Prophet** (Meta’s open-source time series library) with 
+    **XGBoost**. Prophet captured long-term seasonality and temporal patterns and generated forward-looking forecasts. These 
+    forecasts were then passed into XGBoost as **lag-style features**, enabling the tree-based model to combine Prophet’s 
+    extrapolative power with exogenous features like weather and events.
+
+    This hybrid design eliminated the need for complex recurrent or sequential modeling and allowed forecasting across extended 
+    horizons without manual time series splits.
+
+    The dashboard interface was built in **Streamlit**, supporting real-time scenario simulations with sliders and selectors. 
+    **Plotly** handled all temporal charts and pie breakdowns, while **Pydeck** rendered 3D hex maps for spatial insights. 
+    **KeplerGL** was also used during prototyping for detailed exploration of trip vectors and flows across the city.
+    """
+)
+
+
 # --- MOBILE FRIENDLINESS ---
-st.subheader("📱 Tips for Mobile Users")
+st.subheader("Tips for Mobile Users")
 st.markdown(
     """
     - Tap the ☰ icon in the top-left to open the sidebar and switch between pages.

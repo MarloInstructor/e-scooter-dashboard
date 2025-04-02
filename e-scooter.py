@@ -1,21 +1,22 @@
 import streamlit as st
 
 # --- PAGE TITLE ---
-st.title("E-Scooter Demand & Forecasting Dashboard")
+st.title("E-Scooter Demand Dashboard")
 
 # --- PROJECT DESCRIPTION ---
 st.markdown(
     """
-    Welcome to the **E-Scooter Demand & Forecasting Dashboard** – your one-stop solution for exploring,
-    understanding, and planning shared mobility operations. This interactive platform consolidates 
-    historical usage data, location-based demand patterns, and forecasting tools to help you make 
+    Welcome to the **E-Scooter Demand Dashboard** – your one-stop solution for exploring,
+    shared mobility operations of E-Scooter vendors in Chicago. This interactive platform consolidates 
+    historical usage data, location-based consumer and operational demand patterns, and exploratory origin-destination analysis, using advanced modeling tools to facilitate 
     data-driven decisions on fleet distribution, infrastructure investments, and operational strategies.
     
     **Key Capabilities**:
-    - Explore historical ridership trends
-    - Visualize real-time and historical location-based demand
+    - Explore historical ridership trends and model accuracy
+    - Visualize location-based demand patterns and operational hotspots
     - Forecast future usage based on weather and event inputs
     - Identify optimal spots for scooter deployment and rebalancing
+    - Analyze origin-destination flows and identify high-traffic corridors
     """
 )
 
@@ -23,11 +24,11 @@ st.markdown(
 st.subheader("📍 Navigation & Usage")
 st.markdown(
     """
-    **Navigation**: Use the **sidebar** to move between different sections of the dashboard. 
+    **Navigation**: Use the **sidebar** to move between different functions of the dashboard. 
     On mobile devices, tap the ☰ icon in the top-left to access the sidebar.
 
     Within each section, you may find filters (e.g., dates, regions, weather parameters) to 
-    refine your view. Adjust these controls to explore specific scenarios or timeframes.
+    refine your view in the sidebar. Adjust these controls to explore specific scenarios or timeframes.
     """
 )
 
@@ -36,17 +37,16 @@ st.subheader("📊 Dashboard Sections")
 st.markdown(
     """
     - **Historical Dashboard**  
-      Analyze past ridership data by month, day, or hour. Overlay weather conditions 
-      and special events to see how external factors shape demand.
+      Explore past ridership data, both temporal and spatial, and look at the forecasting accuracy. 
 
     - **Temporal Scenario Deck**  
       Create custom forecasts based on calendar inputs (day of week, month, hour) 
       and weather conditions (temperature, rain, snow, wind). Visualize how changes 
-      in these factors might affect hourly trip counts.
+      in these factors might affect hourly trip counts against a baseline.
 
     - **Spatial Trip Deck**  
-      Explore pickup and dropoff clusters on an interactive map. Identify hotspots, 
-      visualize capacity constraints, and detect patterns across different neighborhoods.
+      Explore E-Scooter demand on an interactive map. Identify hotspots, 
+      visualize potential capacity constraints, and detect patterns across different neighborhoods in Chicago.
 
     - **Spatial Demand Deck**  
       Zoom into high-demand zones for rebalancing and resource planning. Discover 

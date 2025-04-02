@@ -121,19 +121,8 @@ def build_deck_for_hour(net_flow_hour, weekday, month, temp, humidity, wind, rai
         tooltip={"text": "Hex {hex_id}\nPredicted Demand: {adj_demand}"}
     )
 
-# --- Plot Helper: Distribution of Net Flow ---
-def plot_net_flow_distribution(net_flow_series):
-    fig, ax = plt.subplots(figsize=(6, 3))
-    sns.histplot(net_flow_series, bins=30, kde=True, ax=ax, color='gray')
-    ax.axvline(0, color='black', linestyle='--')
-    ax.set_title("Distribution of Net Trip Flow across Hexes")
-    ax.set_xlabel("Net Flow (Trips Start - End)")
-    ax.set_ylabel("Hex Count")
-    fig.tight_layout()
-    return fig
-
 # --- Streamlit Interface ---
-st.title("Net Trip Flow Map (6-Hour Window)")
+st.title("Operational Demand (6-Hour Window)")
 
 TIME_BINS = [2.5, 8.5, 14.5, 20.5]
 TEAM_OPTIONS = ["No Team", "ChicagoBulls", "FireFC", "StarsFC"]
@@ -149,11 +138,20 @@ rain = st.sidebar.slider("Rainfall (mm/h)", 0.0, 10.0, BASE_RAIN, step=0.1)
 clouds = st.sidebar.slider("Cloud Cover (%)", 0, 100, BASE_CLOUDS)
 team = st.sidebar.selectbox("Team", options=TEAM_OPTIONS, index=0)
 
+# --- Map Explanation ---
+st.markdown("""
+### Net Flow Map
+
+This map visualizes the **predicted scooter demand** over a selected 6-hour window.
+
+- 🟥 **Red hexes** = Surplus (too many scooters)
+- 🟦 **Blue hexes** = Shortage (not enough scooters)
+
+Use this to inform **fleet rebalancing**:
+**Move scooters from red to blue** areas to optimize supply.
+
+""")
+
+# --- Render Map ---
 deck = build_deck_for_hour(net_flow_hour, weekday, month, temp, humidity, wind, rain, clouds, team)
 st.pydeck_chart(deck)
-
-# --- Show Global Net Flow Histogram ---
-st.subheader("Net Flow Distribution (All Hexes)")
-preds = build_scenario_predictions(net_flow_hour, weekday, month, temp, humidity, wind, rain, clouds, team)
-fig = plot_net_flow_distribution(preds["pred_demand"])
-st.pyplot(fig)

@@ -20,12 +20,12 @@ project_2_page = st.Page(
 )
 project_3_page = st.Page(
     "page_hex_customer.py",
-    title="Spatial Trip Deck",
+    title="Consumer Demand Deck",
     icon=":material/hexagon:",
 )
 project_4_page = st.Page(
     "page_hex_operational.py",
-    title="Spatial Demand Deck",
+    title="Operational Demand Deck",
     icon=":material/monitoring:",
 )
 project_5_page = st.Page(

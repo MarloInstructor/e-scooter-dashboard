@@ -6,7 +6,7 @@ import pandas as pd
 # --------------------------------------------------------------
 # 1. Load and Prepare Data
 # --------------------------------------------------------------
-df = pd.read_csv("lime_maphex.csv")
+df = pd.read_csv("data/lime_maphex.csv")
 df = df.drop(columns=["Unnamed: 0", "Unnamed: 0.1"], errors="ignore")
 
 # --------------------------------------------------------------
@@ -114,5 +114,5 @@ map_1.config = config
 # --------------------------------------------------------------
 # 4. Render the Map in Streamlit
 # --------------------------------------------------------------
-st.title("Trip Data with Trip Count-Based Color and Stroke")
+st.title("Origin-Destination Exploration Deck")
 keplergl_static(map_1)

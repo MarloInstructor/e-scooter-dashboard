@@ -109,7 +109,7 @@ def build_deck_for_hour(hour, day_of_week, month, temp, humidity, wind, rain, cl
     )
 
 # --- Streamlit Interface ---
-st.title("Trip Distribution by Hour")
+st.title("Consumer Demand by Hour")
 
 st.sidebar.header("Forecast Settings")
 hour = st.sidebar.slider("Hour", 0, 23, 0)

@@ -18,6 +18,14 @@ The **Operational Demand Model** goes one step further. Instead of just showing 
 
 While the foundation is strong, the two-week time frame limited what could be achieved in certain areas. For instance, a discounting strategy—where operators might offer incentives to rebalance supply—could only be partially addressed. A full origin–destination (O–D) model would be necessary to simulate the effects of discounting on trip flows between regions. However, this increases model complexity significantly, with over 5,000 spatial combinations, and was out of scope for the available time.
 
+## Learning Notebooks
+This repository includes three beginner-friendly Jupyter notebooks in the `notebooks` folder:
+1. **Machine Learning Basics** – build a simple classifier with scikit-learn.
+2. **Time-Series Forecasting** – explore Prophet for demand forecasting.
+3. **Spatial Binning & Plotting** – visualize data with Folium hex maps.
+Each notebook explains the theory, step by step code, and fun facts along the way.
+
+
 ## Technical Approach
 
 The models were trained on a comprehensive dataset combining public e-scooter trip records from Chicago with web-scraped weather data, holiday calendars, and event schedules. Feature engineering included spatial binning via H3 hexagons, temporal aggregations (hourly, daily, and monthly), and the construction of features to reflect calendar effects, seasonality, and external shocks such as sports events.
